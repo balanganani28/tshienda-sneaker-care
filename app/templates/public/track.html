@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Track My Order | {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 860px;">
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--color-navy); margin-bottom: 0.5rem;">Track my sneaker order</h1>
+    <p style="color: var(--color-text-muted);">
+      Enter your order code to see real-time cleaning progress at the UWC Student Centre kiosk.
+    </p>
+  </div>
+
+  <!-- Search Lookup Form -->
+  <form action="{{ url_for('public.track_index') }}" method="POST" style="max-width: 520px; margin: 0 auto 2.5rem; display: flex; gap: 0.5rem;">
+    {{ form.hidden_tag() }}
+    {{ form.order_code(class_="form-control", placeholder="Order Code (e.g. TSH-7K2M9)", style="text-transform: uppercase; font-weight: 700;", required=True) }}
+    <button type="submit" class="btn btn-primary">Track</button>
+  </form>
+
+  {% if order %}
+    <!-- Order Card with the Memorable Sneaker Progress Bar -->
+    <div class="sneaker-tracker-card" data-order-code="{{ order.order_number }}" data-current-stage="{{ order.stage }}">
+      <div class="tracker-header">
+        <div>
+          <div style="font-size: 0.85rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Order Number</div>
+          <div class="tracker-order-id">{{ order.order_number }}</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 0.85rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase;">Current Status</div>
+          <div class="tracker-status-highlight">
+            <span class="badge badge-{{ order.stage }}" style="font-size: 1rem; padding: 0.35rem 0.85rem;">
+              {{ order.stage_display }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; background-color: var(--color-surface-hover); padding: 1rem; border-radius: var(--radius-md);">
+        <div>
+          <span style="font-size: 0.8rem; color: var(--color-text-muted); display: block;">Service</span>
+          <strong>{{ order.service_display }}</strong>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; color: var(--color-text-muted); display: block;">Pairs</span>
+          <strong>{{ order.pairs }} pair(s)</strong>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; color: var(--color-text-muted); display: block;">Drop-off Date</span>
+          <strong>{{ order.created_at.strftime('%d %b %Y, %H:%M') }}</strong>
+        </div>
+      </div>
+
+      <!-- MEMORABLE SNEAKER PROGRESS BAR -->
+      <div class="stepper-container">
+        <!-- Connecting Lines -->
+        <div class="stepper-line-bg"></div>
+        <div class="stepper-line-fill" style="width: calc({{ current_index }} / 4 * (100% - 6rem));"></div>
+
+        <!-- Stepper Nodes -->
+        <ol class="stepper-steps">
+          {% for stg_key, stg_label in stages %}
+            {% set idx = loop.index0 %}
+            {% set is_completed = idx < current_index %}
+            {% set is_active = idx == current_index %}
+            
+            <li class="stepper-step {% if is_completed %}completed{% elif is_active %}active{% endif %}">
+              <div class="step-node" aria-current="{% if is_active %}step{% endif %}">
+                {% if stg_key == 'dropped_off' %}
+                  {% if is_completed %}✓{% else %}📦{% endif %}
+                {% elif stg_key == 'washing' %}
+                  {% if is_completed %}✓{% else %}🧼{% endif %}
+                {% elif stg_key == 'drying' %}
+                  {% if is_completed %}✓{% else %}💨{% endif %}
+                {% elif stg_key == 'ready' %}
+                  {% if is_completed %}✓{% else %}✨{% endif %}
+                {% elif stg_key == 'collected' %}
+                  {% if is_completed or is_active %}🤝{% else %}👟{% endif %}
+                {% endif %}
+              </div>
+              <div class="step-title">{{ stg_label }}</div>
+              {% if stg_key in stage_timestamps %}
+                <div class="step-time">{{ stage_timestamps[stg_key].strftime('%d %b, %H:%M') }}</div>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ol>
+      </div>
+
+      <!-- Timeline Logs Section -->
+      <div class="timeline-section">
+        <h3 class="timeline-title">Stage history</h3>
+        <ul class="timeline-list">
+          {% for log in order.stage_logs.order_by('timestamp asc').all() %}
+            <li class="timeline-item">
+              <div class="timeline-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                  <span class="timeline-stage">{{ log.stage_display }}</span>
+                  <span class="timeline-timestamp">{{ log.timestamp.strftime('%a, %d %b %Y at %H:%M') }}</span>
+                </div>
+                {% if log.notes %}
+                  <div style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 0.25rem;">{{ log.notes }}</div>
+                {% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Ready for collection notice if in ready stage -->
+      {% if order.stage == 'ready' %}
+        <div style="margin-top: 2rem; background-color: var(--color-warm-yellow-light); border: 2px solid var(--color-warm-yellow); border-radius: var(--radius-md); padding: 1.25rem; text-align: center;">
+          <h4 style="color: #92400E; font-size: 1.15rem; margin-bottom: 0.25rem;">🎉 Your kicks are ready for pickup!</h4>
+          <p style="color: #92400E; font-size: 0.95rem;">
+            Please visit the UWC Student Centre kiosk between 08:30 and 16:30. Present your order number <strong>{{ order.order_number }}</strong> to collect your fresh pairs.
+          </p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- POPIA Privacy Notice -->
+    <p style="text-align: center; font-size: 0.85rem; color: var(--color-text-subtle);">
+      🔒 For your privacy under South Africa's POPIA Act, personal contact details and phone numbers are never displayed publicly.
+    </p>
+
+  {% elif searched_code %}
+    <div class="card" style="text-align: center; padding: 3rem 1.5rem; max-width: 520px; margin: 2rem auto;">
+      <h3 style="color: var(--color-navy); margin-bottom: 0.5rem;">Order Not Found</h3>
+      <p style="color: var(--color-text-muted); margin-bottom: 1.5rem;">
+        No active order was found matching code <strong>{{ searched_code }}</strong>. Please check your printed QR tag or WhatsApp confirmation.
+      </p>
+      <a href="{{ url_for('public.index') }}" class="btn btn-secondary">Return Home</a>
+    </div>
+  {% else %}
+    <div class="card" style="text-align: center; padding: 3rem 1.5rem; max-width: 520px; margin: 2rem auto;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+      <h3 style="color: var(--color-navy); margin-bottom: 0.5rem;">Ready to track</h3>
+      <p style="color: var(--color-text-muted);">
+        Enter the 5-digit code from your QR tag label or the link sent to your WhatsApp at drop-off.
+      </p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/tracker.js') }}"></script>
+{% endblock %}

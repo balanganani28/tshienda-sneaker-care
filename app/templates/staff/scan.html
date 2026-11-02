@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}QR Scanner & Stage Advance | {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 640px;">
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <h1 style="font-size: 2rem; font-weight: 800; color: var(--color-navy); margin-bottom: 0.25rem;">Scan QR tag</h1>
+    <p style="color: var(--color-text-muted);">Use the phone camera or enter the order code manually to advance stage with one tap.</p>
+  </div>
+
+  <!-- Camera QR Scanner Viewport -->
+  <div class="card" style="margin-bottom: 1.5rem; text-align: center;">
+    <div style="position: relative; width: 100%; max-width: 400px; height: 260px; margin: 0 auto 1rem; background-color: #000000; border-radius: var(--radius-md); overflow: hidden; display: flex; align-items: center; justify-content: center;">
+      <video id="scannerVideo" style="width: 100%; height: 100%; object-fit: cover;"></video>
+      <div style="position: absolute; width: 180px; height: 180px; border: 2px dashed #38BDF8; border-radius: var(--radius-md); pointer-events: none;"></div>
+    </div>
+
+    <div id="cameraStatus" style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+      Camera idle. Tap Start Camera to scan phone tags.
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 0.5rem;">
+      <button type="button" id="startCameraBtn" class="btn btn-primary">📷 Start Camera</button>
+      <button type="button" id="stopCameraBtn" class="btn btn-secondary" style="display: none;">⏹️ Stop Camera</button>
+    </div>
+  </div>
+
+  <!-- Fallback Manual Order Input Form -->
+  <div class="card" style="margin-bottom: 2rem;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--color-navy); margin-bottom: 0.75rem;">Manual code entry (if camera fails)</h3>
+    <form method="POST" style="display: flex; gap: 0.5rem;">
+      {{ form.hidden_tag() }}
+      {{ form.order_number(class_="form-control", placeholder="e.g. TSH-7K2M9", style="text-transform: uppercase; font-weight: 700;", required=True) }}
+      <button type="submit" class="btn btn-secondary">Lookup</button>
+    </form>
+  </div>
+
+  <!-- Scanned Order Result Card with 1-Tap Advance -->
+  {% if scanned_order %}
+    <div class="card" style="border-color: var(--color-sky); box-shadow: var(--shadow-md);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.75rem;">
+        <div>
+          <span style="font-size: 0.8rem; color: var(--color-text-muted);">SCANNED ORDER</span>
+          <h2 style="font-size: 1.6rem; font-weight: 900; color: var(--color-navy); font-family: monospace;">{{ scanned_order.order_number }}</h2>
+        </div>
+        <div>
+          <span class="badge badge-{{ scanned_order.stage }}" style="font-size: 0.9rem; padding: 0.35rem 0.75rem;">
+            Current: {{ scanned_order.stage_display }}
+          </span>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1.5rem; font-size: 0.95rem;">
+        <div>Customer: <strong>{{ scanned_order.customer.name }}</strong></div>
+        <div>Service: <strong>{{ scanned_order.service_display }} ({{ scanned_order.pairs }} pairs)</strong></div>
+        {% if scanned_order.notes %}
+          <div style="color: var(--color-text-muted); font-size: 0.85rem; margin-top: 0.25rem;">Notes: {{ scanned_order.notes }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        {% if scanned_order.can_advance %}
+          <form action="{{ url_for('staff.advance_order', order_id=scanned_order.id, _from='scan') }}" method="POST">
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+              ⚡ Move to {{ next_stage_name }} (1-Tap)
+            </button>
+          </form>
+        {% else %}
+          <div style="background-color: var(--color-success-light); color: #065F46; padding: 0.75rem; border-radius: var(--radius-md); text-align: center; font-weight: 700;">
+            ✓ Order has already reached the final stage (Collected).
+          </div>
+        {% endif %}
+
+        {% if wa_link %}
+          <a href="{{ wa_link }}" target="_blank" rel="noopener" class="btn btn-whatsapp" style="width: 100%;">
+            💬 Send WhatsApp Update (wa.me 1-Tap)
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/scan.js') }}"></script>
+{% endblock %}

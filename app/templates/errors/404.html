@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Page Not Found | {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="container" style="text-align: center; padding: 4rem 1rem;">
+  <h1 style="font-size: 3.5rem; color: var(--color-sky); margin-bottom: 1rem;">404</h1>
+  <h2 style="margin-bottom: 1rem;">Page not found</h2>
+  <p style="color: var(--color-text-muted); max-width: 480px; margin: 0 auto 2rem;">
+    The page or order you are looking for does not exist or may have been moved.
+  </p>
+  <a href="{{ url_for('public.index') }}" class="btn btn-primary">Return to Homepage</a>
+</div>
+{% endblock %}

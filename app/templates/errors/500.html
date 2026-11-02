@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}System Error | {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="container" style="text-align: center; padding: 4rem 1rem;">
+  <h1 style="font-size: 3.5rem; color: var(--color-danger); margin-bottom: 1rem;">500</h1>
+  <h2 style="margin-bottom: 1rem;">Unexpected server issue</h2>
+  <p style="color: var(--color-text-muted); max-width: 480px; margin: 0 auto 2rem;">
+    An internal error occurred. Our team has been notified. Please try again shortly.
+  </p>
+  <a href="{{ url_for('public.index') }}" class="btn btn-primary">Return to Homepage</a>
+</div>
+{% endblock %}

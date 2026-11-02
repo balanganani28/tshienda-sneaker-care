@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Tshienda Sneaker Care | Clean Sneakers, On Campus, At Student Prices{% endblock %}
+{% block content %}
+<div class="container">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-tagline-badge">
+      <span>👟 UWC Bellville Campus</span> &bull; <span>Real-time WhatsApp Tracking</span>
+    </div>
+    <h1 class="hero-title">Clean sneakers, on campus, at student prices</h1>
+    <p class="hero-subtitle">
+      Drop your dirty kicks off at our Student Centre kiosk in the morning, track cleaning progress live, and collect fresh sneakers between classes.
+    </p>
+
+    <!-- Live Order Lookup Box -->
+    <form action="{{ url_for('public.track_index') }}" method="POST" class="hero-lookup-box">
+      {{ form.hidden_tag() }}
+      {{ form.order_code(class_="hero-lookup-input", placeholder="Enter your order code (e.g. TSH-7K2M9)", required=True) }}
+      <button type="submit" class="btn btn-primary">Track Order</button>
+    </form>
+    
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+      <a href="{{ url_for('public.prices') }}" class="btn btn-secondary">View Student Prices</a>
+      <a href="#how-it-works" class="btn btn-secondary">How It Works</a>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" style="margin: 4rem 0;">
+    <div style="text-align: center; max-width: 600px; margin: 0 auto 2.5rem;">
+      <h2 style="font-size: 2rem; font-weight: 800; color: var(--color-navy); margin-bottom: 0.5rem;">How it works in four simple steps</h2>
+      <p style="color: var(--color-text-muted);">Quick campus drop-off, professional care, and live WhatsApp notifications from intake to collection.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">01</div>
+        <h3 class="step-card-title">Drop off</h3>
+        <p style="color: var(--color-text-muted); font-size: 0.95rem;">
+          Bring your dirty kicks to the Tshienda kiosk at the UWC Student Centre. We document condition and give you a QR tagged order number.
+        </p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">02</div>
+        <h3 class="step-card-title">We clean</h3>
+        <p style="color: var(--color-text-muted); font-size: 0.95rem;">
+          Our trained student team hand-cleans uppers, scrub midsoles, treat stubborn stains, and deodorize insoles using eco-friendly solutions.
+        </p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">03</div>
+        <h3 class="step-card-title">We message you</h3>
+        <p style="color: var(--color-text-muted); font-size: 0.95rem;">
+          Staff scan your tag at every stage. You receive instant WhatsApp alerts as your kicks move through Washing, Drying, and Ready for Collection.
+        </p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">04</div>
+        <h3 class="step-card-title">You collect</h3>
+        <p style="color: var(--color-text-muted); font-size: 0.95rem;">
+          Walk into the Student Centre between lectures, show your order code or WhatsApp alert, and step out in spotless sneakers.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prices Section Preview -->
+  <section style="margin: 4rem 0;">
+    <div style="text-align: center; max-width: 600px; margin: 0 auto 2.5rem;">
+      <h2 style="font-size: 2rem; font-weight: 800; color: var(--color-navy); margin-bottom: 0.5rem;">Transparent student pricing</h2>
+      <p style="color: var(--color-text-muted);">Affordable sneaker care designed specifically for university budgets. No hidden fees.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--color-navy);">Standard Clean</h3>
+        <p style="color: var(--color-text-muted); font-size: 0.9rem;">For everyday trainers, canvas, synthetic uppers, and gym shoes.</p>
+        <div class="price-amount">R{{ prices.standard }}</div>
+        <ul class="price-features">
+          <li>✓ Surface dirt & dust removal</li>
+          <li>✓ Upper and tongue hand clean</li>
+          <li>✓ Midsole & foxing scrub</li>
+          <li>✓ Laces washed and untangled</li>
+          <li>✓ 24–48 hour turnaround</li>
+        </ul>
+        <a href="{{ url_for('public.prices') }}" class="btn btn-secondary">Learn More</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Most Popular</div>
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--color-navy);">Deep Clean</h3>
+        <p style="color: var(--color-text-muted); font-size: 0.9rem;">For muddy sneakers, heavy stains, and high-wear campus favourites.</p>
+        <div class="price-amount">R{{ prices.deep }}</div>
+        <ul class="price-features">
+          <li>✓ Everything in Standard Clean</li>
+          <li>✓ Heavy mud & stain treatment</li>
+          <li>✓ Under-sole gravel & tread scrub</li>
+          <li>✓ Insole extraction & deodorizer</li>
+          <li>✓ Anti-bacterial hygiene mist</li>
+        </ul>
+        <a href="{{ url_for('public.prices') }}" class="btn btn-primary">Choose Deep Clean</a>
+      </div>
+
+      <div class="pricing-card">
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--color-navy);">Suede & Leather</h3>
+        <p style="color: var(--color-text-muted); font-size: 0.9rem;">Specialist restoration for Jordans, Sambas, and delicate materials.</p>
+        <div class="price-amount">R{{ prices.suede_leather }}</div>
+        <ul class="price-features">
+          <li>✓ Delicate dry suede eraser & nap brush</li>
+          <li>✓ Premium leather foam cleanse</li>
+          <li>✓ Leather hydration & conditioning</li>
+          <li>✓ Color rejuvenation nap reset</li>
+          <li>✓ Weather & stain repellent finish</li>
+        </ul>
+        <a href="{{ url_for('public.prices') }}" class="btn btn-secondary">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section style="margin: 4rem 0; background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 2.5rem 2rem;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center;">
+      <div>
+        <span style="font-size: 0.85rem; font-weight: 700; color: var(--color-sky); text-transform: uppercase;">About Our Business</span>
+        <h2 style="font-size: 1.85rem; font-weight: 800; color: var(--color-navy); margin: 0.5rem 0 1rem;">
+          "Tshienda" is the Tshivenda word for shoe
+        </h2>
+        <p style="color: var(--color-text-muted); margin-bottom: 1rem;">
+          Tshienda was founded right here on the University of the Western Cape campus by student entrepreneurs who saw classmates struggling with rain, muddy quad walkways, and expensive off-campus sneaker laundries.
+        </p>
+        <p style="color: var(--color-text-muted); margin-bottom: 1rem;">
+          We believe clean footwear changes how you feel walking across campus, attending interviews, or presenting in class. By keeping sneaker care on campus, we save students time, extend the life of expensive sneakers, and create flexible part-time student employment.
+        </p>
+        <p style="font-size: 0.95rem; font-weight: 600; color: var(--color-navy);">
+          🌱 100% gentle hand washing — zero harsh machine spins that damage sneaker glue or foam.
+        </p>
+      </div>
+      <div style="text-align: center;">
+        <img src="{{ url_for('static', filename='img/logo_512.png') }}" alt="Tshienda Logo" style="max-width: 280px; width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact & Campus Location Section -->
+  <section style="margin: 4rem 0;">
+    <div class="card" style="padding: 2.5rem 2rem;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+        <div>
+          <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--color-navy); margin-bottom: 0.75rem;">Where to find us</h2>
+          <p style="color: var(--color-text-muted); margin-bottom: 1.25rem;">
+            Drop off or collect your pairs at our official kiosk on campus:
+          </p>
+          <p style="font-size: 1rem; color: var(--color-text); margin-bottom: 0.5rem;">
+            📍 <strong>Location:</strong> UWC Student Centre (Ground Floor Kiosk), Robert Sobukwe Road, Bellville, Cape Town
+          </p>
+          <p style="font-size: 1rem; color: var(--color-text); margin-bottom: 0.5rem;">
+            🕒 <strong>Operating Hours:</strong> Monday – Friday: 08:30 – 16:30
+          </p>
+          <p style="font-size: 1rem; color: var(--color-text);">
+            📧 <strong>Email:</strong> [hello@tshienda.co.za]
+          </p>
+        </div>
+
+        <div style="background-color: var(--color-surface-hover); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.5rem; display: flex; flex-direction: column; justify-content: center;">
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-navy); margin-bottom: 0.5rem;">Need immediate help?</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">
+            Have questions about stubborn stains or turnaround times? Message our student kiosk supervisor directly on WhatsApp:
+          </p>
+          <a href="https://wa.me/27820000000?text=Hi%20Tshienda%20team,%20I%20have%20a%20question%20about%20my%20sneakers" target="_blank" rel="noopener" class="btn btn-whatsapp">
+            Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

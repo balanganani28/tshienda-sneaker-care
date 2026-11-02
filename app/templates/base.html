@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ brand_name }} | Sneaker Care on UWC Campus{% endblock %}</title>
+  <meta name="description" content="Professional sneaker cleaning service on the University of the Western Cape (UWC) campus in Bellville, Cape Town. Real-time WhatsApp order tracking.">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <!-- Header & Navigation -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="{{ url_for('public.index') }}" class="brand-link">
+        <img src="{{ url_for('static', filename='img/logo_512.png') }}" alt="Tshienda Logo" class="brand-logo">
+        <div>
+          <span class="brand-title">{{ brand_name }}</span>
+          <span class="brand-campus">UWC Bellville</span>
+        </div>
+      </a>
+
+      <!-- Desktop & Mobile Nav Menu -->
+      <nav>
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="{{ url_for('public.index') }}" class="nav-link">Home</a></li>
+          <li><a href="{{ url_for('public.prices') }}" class="nav-link">Prices</a></li>
+          <li><a href="{{ url_for('public.track_index') }}" class="nav-link">Track Order</a></li>
+          <li><a href="{{ url_for('public.faq') }}" class="nav-link">FAQ</a></li>
+          <li><a href="{{ url_for('public.privacy') }}" class="nav-link">POPIA Privacy</a></li>
+          
+          {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('staff.dashboard') }}" class="nav-link"><strong>Dashboard</strong></a></li>
+            <li><a href="{{ url_for('staff.dropoff') }}" class="nav-link">New Drop-off</a></li>
+            <li><a href="{{ url_for('staff.scan') }}" class="nav-link">Scan QR</a></li>
+            <li><a href="{{ url_for('staff.reports') }}" class="nav-link">Reports</a></li>
+            {% if current_user.is_owner %}
+              <li><a href="{{ url_for('staff.settings') }}" class="nav-link">Settings</a></li>
+            {% endif %}
+            <li><a href="{{ url_for('auth.logout') }}" class="nav-link text-danger">Sign Out</a></li>
+          {% else %}
+            <li><a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-sm">Staff Login</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+
+      <!-- Action buttons & Theme Switcher -->
+      <div class="header-actions">
+        <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark/light mode">🌙</button>
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open navigation menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Flash Messages Block -->
+  <div class="container flash-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}" role="alert">
+            <span>{{ message }}</span>
+            <button type="button" class="alert-close" aria-label="Close notification">&times;</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Main Content Block -->
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <img src="{{ url_for('static', filename='img/logo_512.png') }}" alt="Tshienda Logo" style="height: 32px; width: 32px;">
+            <span style="font-weight: 800; font-size: 1.2rem; color: var(--color-navy);">Tshienda Sneaker Care</span>
+          </div>
+          <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+            {{ tagline }} Student-founded on the University of the Western Cape campus in Bellville, Cape Town. "Tshienda" is the Tshivenda word for shoe.
+          </p>
+          <p style="font-size: 0.85rem; color: var(--color-text-subtle);">
+            📍 <strong>Campus Kiosk:</strong> {{ location_note }}<br>
+            🕒 <strong>Hours:</strong> Mon – Fri: 08:30 – 16:30
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="{{ url_for('public.track_index') }}">Track My Sneaker Order</a></li>
+            <li><a href="{{ url_for('public.prices') }}">Student Price List</a></li>
+            <li><a href="{{ url_for('public.faq') }}">Frequently Asked Questions</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Staff Operations Portal</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Legal & POPIA</h4>
+          <ul class="footer-links">
+            <li><a href="{{ url_for('public.privacy') }}">POPIA Privacy Policy</a></li>
+            <li><a href="{{ url_for('public.request_deletion') }}">Request Data Deletion</a></li>
+            <li><a href="{{ url_for('public.terms') }}">Terms of Service</a></li>
+            <li><a href="https://wa.me/27820000000" target="_blank" rel="noopener">WhatsApp Campus Helpline</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; {{ current_year }} Tshienda Sneaker Care. Student-run business at UWC Bellville.</div>
+        <div>Compliant with South Africa's Protection of Personal Information Act (POPIA).</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

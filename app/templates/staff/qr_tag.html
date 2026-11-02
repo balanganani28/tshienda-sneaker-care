@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Print QR Tag - {{ order.order_number }} | {{ brand_name }}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/qr-print.css') }}">
+{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 600px;">
+  <!-- Screen Action Bar (hidden when printing) -->
+  <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+    <a href="{{ url_for('staff.dashboard') }}" class="btn btn-secondary btn-sm">&larr; Back to Dashboard</a>
+    <div style="display: flex; gap: 0.5rem;">
+      <button onclick="window.print()" class="btn btn-primary">🖨️ Print Tag</button>
+      {% if wa_link %}
+        <a href="{{ wa_link }}" target="_blank" rel="noopener" class="btn btn-whatsapp">💬 Send WhatsApp Intake</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- The Printable Label Tag (80mm x 55mm card layout) -->
+  <div class="card print-label-card" style="text-align: center; border: 2px dashed var(--color-border); padding: 1.5rem;">
+    <div style="font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; color: var(--color-navy); text-transform: uppercase;">
+      TSHIENDA SNEAKER CARE &bull; UWC
+    </div>
+    
+    <div class="print-order-number" style="font-size: 2rem; font-weight: 900; color: var(--color-navy); margin: 0.5rem 0;">
+      {{ order.order_number }}
+    </div>
+
+    <!-- Generated QR Image -->
+    <div style="margin: 0.75rem auto;">
+      <img src="{{ qr_b64 }}" alt="QR Code for Order {{ order.order_number }}" class="print-qr-code" style="width: 170px; height: 170px; border-radius: var(--radius-sm); border: 1px solid #000000;">
+    </div>
+
+    <div style="font-size: 0.85rem; font-weight: 700; color: var(--color-text); margin-bottom: 0.25rem;">
+      Customer: {{ customer.name }}
+    </div>
+
+    <div style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">
+      Service: <strong>{{ order.service_display }}</strong> &bull; Pairs: <strong>{{ order.pairs }}</strong>
+    </div>
+
+    {% if order.notes %}
+      <div style="font-size: 0.75rem; color: #475569; background-color: var(--color-surface-hover); padding: 0.35rem 0.5rem; border-radius: var(--radius-sm); margin-bottom: 0.5rem;">
+        Notes: {{ order.notes }}
+      </div>
+    {% endif %}
+
+    <div style="font-size: 0.7rem; color: var(--color-text-subtle);">
+      Drop-off: {{ order.created_at.strftime('%Y-%m-%d %H:%M') }} &bull; Scan tag to advance stage
+    </div>
+  </div>
+</div>
+{% endblock %}

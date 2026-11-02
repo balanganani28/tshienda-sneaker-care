@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Too Many Requests | {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="container" style="text-align: center; padding: 4rem 1rem;">
+  <h1 style="font-size: 3.5rem; color: var(--color-warm-yellow); margin-bottom: 1rem;">429</h1>
+  <h2 style="margin-bottom: 1rem;">Too many lookups</h2>
+  <p style="color: var(--color-text-muted); max-width: 520px; margin: 0 auto 2rem;">
+    To protect customer privacy and prevent automated scanning, order lookups are rate-limited. Please wait a moment before trying again.
+  </p>
+  <a href="{{ url_for('public.track_index') }}" class="btn btn-primary">Try Tracking Again</a>
+</div>
+{% endblock %}

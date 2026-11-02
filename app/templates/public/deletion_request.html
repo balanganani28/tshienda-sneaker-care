@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Request Data Deletion | {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 600px;">
+  <div style="margin-bottom: 2rem; text-align: center;">
+    <h1 style="font-size: 2rem; font-weight: 900; color: var(--color-navy); margin-bottom: 0.5rem;">POPIA data deletion request</h1>
+    <p style="color: var(--color-text-muted);">
+      Exercise your data subject right under Section 24 of POPIA to erase your phone number from our records.
+    </p>
+  </div>
+
+  <div class="card">
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        {{ form.customer_name.label(class_="form-label") }}
+        {{ form.customer_name(class_="form-control", placeholder="Your name provided at drop-off", required=True) }}
+      </div>
+
+      <div class="form-group">
+        {{ form.phone.label(class_="form-label") }}
+        {{ form.phone(class_="form-control", placeholder="e.g. 082 123 4567 or +27821234567", required=True) }}
+        <div class="form-hint">Enter the WhatsApp number associated with your orders.</div>
+      </div>
+
+      <div class="form-group">
+        {{ form.notes.label(class_="form-label") }}
+        {{ form.notes(class_="form-control", rows="3", placeholder="Optional reason or specific order reference") }}
+      </div>
+
+      <button type="submit" class="btn btn-danger" style="width: 100%;">
+        Permanently Erase My Data
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

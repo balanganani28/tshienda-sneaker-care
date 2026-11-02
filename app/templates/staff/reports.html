@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Operational Reports | {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="container">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+    <div>
+      <h1 style="font-size: 2rem; font-weight: 800; color: var(--color-navy); margin-bottom: 0.25rem;">Business reports & analytics</h1>
+      <p style="color: var(--color-text-muted);">Pairs cleaned, daily/weekly revenue, repeat customers, and referral tracking.</p>
+    </div>
+    <a href="{{ url_for('staff.export_csv') }}" class="btn btn-secondary">📥 Export CSV Data</a>
+  </div>
+
+  <!-- Summary Cards -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">
+    <div class="card" style="text-align: center; padding: 1.25rem;">
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Total Pairs Cleaned</div>
+      <div style="font-size: 2rem; font-weight: 900; color: var(--color-sky);">{{ total_pairs }}</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 1.25rem;">
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Total Revenue</div>
+      <div style="font-size: 2rem; font-weight: 900; color: var(--color-navy);">R{{ "%.2f"|format(total_revenue) }}</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 1.25rem;">
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Total Customers</div>
+      <div style="font-size: 2rem; font-weight: 900; color: #6D28D9;">{{ total_customers }}</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 1.25rem;">
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Repeat Customer Rate</div>
+      <div style="font-size: 2rem; font-weight: 900; color: var(--color-warm-yellow);">{{ repeat_rate }}%</div>
+      <div style="font-size: 0.75rem; color: var(--color-text-subtle);">{{ repeat_customers_count }} returning students</div>
+    </div>
+  </div>
+
+  <!-- Daily & Weekly Breakdown -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem;">
+    <!-- Daily Stats -->
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <div style="padding: 1.25rem; border-bottom: 1px solid var(--color-border); font-weight: 700; font-size: 1.1rem; color: var(--color-navy);">
+        Pairs & Revenue (Last 7 Days)
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Orders</th>
+              <th>Pairs</th>
+              <th>Revenue (ZAR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for d in daily_stats %}
+              <tr>
+                <td>{{ d.date }}</td>
+                <td>{{ d.orders }}</td>
+                <td><strong>{{ d.pairs }}</strong></td>
+                <td>R{{ "%.2f"|format(d.revenue) }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Weekly Stats -->
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <div style="padding: 1.25rem; border-bottom: 1px solid var(--color-border); font-weight: 700; font-size: 1.1rem; color: var(--color-navy);">
+        Pairs & Revenue (Last 4 Weeks)
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Week</th>
+              <th>Orders</th>
+              <th>Pairs</th>
+              <th>Revenue (ZAR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for w in weekly_stats %}
+              <tr>
+                <td>{{ w.label }}</td>
+                <td>{{ w.orders }}</td>
+                <td><strong>{{ w.pairs }}</strong></td>
+                <td>R{{ "%.2f"|format(w.revenue) }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Referral Channels Breakdown -->
+  <div class="card" style="padding: 0; overflow: hidden;">
+    <div style="padding: 1.25rem; border-bottom: 1px solid var(--color-border); font-weight: 700; font-size: 1.1rem; color: var(--color-navy);">
+      Referral Source Breakdown (Asked at Drop-off)
+    </div>
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Channel</th>
+            <th>Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for label, cnt in referral_counts.items() %}
+            <tr>
+              <td>{{ label }}</td>
+              <td><strong>{{ cnt }}</strong></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Frequently Asked Questions | {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 820px;">
+  <div style="text-align: center; margin-bottom: 3rem;">
+    <h1 style="font-size: 2.4rem; font-weight: 900; color: var(--color-navy); margin-bottom: 0.5rem;">Frequently asked questions</h1>
+    <p style="color: var(--color-text-muted);">Everything you need to know about turnaround times, damage policies, and WhatsApp updates.</p>
+  </div>
+
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <h3 class="card-title">What is your turnaround time?</h3>
+    <p style="color: var(--color-text-muted);">
+      Our typical turnaround time is <strong>24 to 48 hours</strong>. Because we do not use aggressive heat dryers that can warp soles or melt synthetic glues, drying times depend partly on Cape Town weather. We monitor every pair during the natural air-drying phase and notify you on WhatsApp the moment they are Ready.
+    </p>
+  </div>
+
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <h3 class="card-title">What is your damage policy?</h3>
+    <p style="color: var(--color-text-muted); margin-bottom: 0.75rem;">
+      We take great care of every pair. Before accepting any sneaker, our team performs a condition check and records existing scuffs, tears, or loose stitching in our intake notes.
+    </p>
+    <p style="color: var(--color-text-muted);">
+      We do not accept sneakers with pre-existing crumbling midsoles (hydrolysis / dry rot) as washing will accelerate deterioration. In the rare event of damage caused directly by our cleaning process, liability is capped at the service fee or <strong>[a maximum compensation of R500 per pair]</strong> upon review by the business owner.
+    </p>
+  </div>
+
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <h3 class="card-title">What happens if I forget to collect my sneakers?</h3>
+    <p style="color: var(--color-text-muted);">
+      Pairs are safely stored in our locked kiosk. After 14 days, we send a WhatsApp reminder. As per our terms, pairs uncollected after <strong>[30 days]</strong> following the "Ready" alert will be subject to a nominal storage fee, and items uncollected after <strong>[60 days]</strong> will be donated to a local Bellville community student charity.
+    </p>
+  </div>
+
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <h3 class="card-title">How does consent for WhatsApp updates work?</h3>
+    <p style="color: var(--color-text-muted); margin-bottom: 0.75rem;">
+      Under South Africa’s Protection of Personal Information Act (POPIA), we only collect your mobile number with your explicit consent at drop-off.
+    </p>
+    <p style="color: var(--color-text-muted);">
+      We strictly use your number for transactional order updates: drop-off confirmation, stage transitions, and collection readiness alerts. We do not sell your number or send marketing spam. You can opt out or request data erasure at any time via our <a href="{{ url_for('public.request_deletion') }}">POPIA Deletion Request page</a>.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Do you clean suede and nubuck?</h3>
+    <p style="color: var(--color-text-muted);">
+      Yes! Suede and leather require specialized care. We use dedicated dry eraser blocks, brass/crepe nap brushes, low-moisture cleaning foams, and conditioning balms to ensure the nap is soft and vibrant without water staining. Choose the "Suede & Leather" tier at drop-off.
+    </p>
+  </div>
+</div>
+{% endblock %}

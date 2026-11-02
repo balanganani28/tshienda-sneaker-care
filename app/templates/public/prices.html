@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Prices & Services | {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 900px;">
+  <div style="text-align: center; margin-bottom: 3rem;">
+    <h1 style="font-size: 2.5rem; font-weight: 900; color: var(--color-navy); margin-bottom: 0.75rem;">Student price list</h1>
+    <p style="color: var(--color-text-muted); font-size: 1.15rem;">
+      Professional sneaker care on the UWC Bellville campus. Prices set to remain accessible for all students.
+    </p>
+  </div>
+
+  <!-- Launch & Referral Offers (Clearly marked placeholders) -->
+  <div class="placeholder-offer">
+    🎉 <strong>[Launch Special: 15% discount for UWC students with a valid student card during March and April]</strong>
+  </div>
+
+  <div class="placeholder-offer" style="background-color: var(--color-sky-light); border-color: var(--color-sky); color: #0369A1;">
+    🤝 <strong>[Referral Offer: Bring a friend or refer a classmate to get R20 off your next pair clean]</strong>
+  </div>
+
+  <!-- Detailed Pricing Breakdown -->
+  <div class="card" style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1rem;">
+      <div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--color-navy);">Standard Clean</h2>
+        <p style="color: var(--color-text-muted); font-size: 0.95rem;">Everyday trainers, synthetic leather, canvas, mesh, running shoes</p>
+      </div>
+      <div style="font-size: 2rem; font-weight: 900; color: var(--color-navy);">R{{ prices.standard }}</div>
+    </div>
+    <ul class="price-features" style="margin-bottom: 0;">
+      <li>✓ Complete upper and tongue foam scrub</li>
+      <li>✓ Midsole cleaning to restore crisp appearance</li>
+      <li>✓ Laces removed, soaked, and hand cleaned</li>
+      <li>✓ Natural shape air-drying without damaging heat</li>
+      <li>✓ <strong>Turnaround:</strong> 24–48 hours depending on weather</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom: 2rem; border-color: var(--color-sky);">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1rem;">
+      <div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--color-navy);">Deep Clean</h2>
+        <p style="color: var(--color-text-muted); font-size: 0.95rem;">Heavily soiled sneakers, post-rain mud, embedded dirt, odor treatment</p>
+      </div>
+      <div style="font-size: 2rem; font-weight: 900; color: var(--color-navy);">R{{ prices.deep }}</div>
+    </div>
+    <ul class="price-features" style="margin-bottom: 0;">
+      <li>✓ All services included in Standard Clean</li>
+      <li>✓ Heavy stain removal and pre-treatment</li>
+      <li>✓ Under-sole deep gravel pick and scrub</li>
+      <li>✓ Insole extraction, deep wash, and deodorizing mist</li>
+      <li>✓ Anti-bacterial sanitizing spray</li>
+      <li>✓ <strong>Turnaround:</strong> 24–48 hours</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1rem;">
+      <div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--color-navy);">Suede & Leather Care</h2>
+        <p style="color: var(--color-text-muted); font-size: 0.95rem;">Delicate suede, nubuck, raw leather, Jordans, Sambas, premium streetwear</p>
+      </div>
+      <div style="font-size: 2rem; font-weight: 900; color: var(--color-navy);">R{{ prices.suede_leather }}</div>
+    </div>
+    <ul class="price-features" style="margin-bottom: 0;">
+      <li>✓ Dry eraser and gentle brass/crepe brush treatment</li>
+      <li>✓ Specialized low-moisture foam for suede and nubuck</li>
+      <li>✓ Premium leather balm and conditioning hydration</li>
+      <li>✓ Nap resetting to restore velvety texture</li>
+      <li>✓ Weather shield protective coating against rain and spills</li>
+      <li>✓ <strong>Turnaround:</strong> 48 hours for delicate drying</li>
+    </ul>
+  </div>
+
+  <div class="card" style="background-color: var(--color-surface-hover);">
+    <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-navy); margin-bottom: 0.5rem;">Accepted payment methods</h3>
+    <p style="color: var(--color-text-muted); font-size: 0.95rem;">
+      Cash at drop-off or collection, SnapScan QR code at kiosk, debit/credit card, and direct Capitec / EFT payment.
+    </p>
+  </div>
+</div>
+{% endblock %}

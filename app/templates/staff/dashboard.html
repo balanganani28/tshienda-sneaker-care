@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Staff Dashboard | {{ brand_name }}{% endblock %}
+{% block content %}
+<div class="container">
+  <!-- Dashboard Top Bar -->
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+    <div>
+      <h1 style="font-size: 2rem; font-weight: 800; color: var(--color-navy); margin-bottom: 0.25rem;">Orders dashboard</h1>
+      <p style="color: var(--color-text-muted); font-size: 0.95rem;">Kiosk operations at UWC Student Centre.</p>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+      <a href="{{ url_for('staff.dropoff') }}" class="btn btn-primary">+ New Drop-off</a>
+      <a href="{{ url_for('staff.scan') }}" class="btn btn-secondary">📷 Scan QR Camera</a>
+    </div>
+  </div>
+
+  <!-- Stage Counter Filter Cards -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+    <a href="{{ url_for('staff.dashboard', stage='all') }}" class="card" style="text-align: center; padding: 1rem; text-decoration: none; border-color: {% if current_filter == 'all' %}var(--color-sky){% else %}var(--color-border){% endif %};">
+      <div style="font-size: 0.8rem; color: var(--color-text-muted); font-weight: 600;">ALL ORDERS</div>
+      <div style="font-size: 1.75rem; font-weight: 900; color: var(--color-navy);">{{ stage_counts.all }}</div>
+    </a>
+    <a href="{{ url_for('staff.dashboard', stage='dropped_off') }}" class="card" style="text-align: center; padding: 1rem; text-decoration: none; border-color: {% if current_filter == 'dropped_off' %}var(--color-sky){% else %}var(--color-border){% endif %};">
+      <div style="font-size: 0.8rem; color: var(--color-text-muted); font-weight: 600;">DROPPED OFF</div>
+      <div style="font-size: 1.75rem; font-weight: 900; color: #334155;">{{ stage_counts.dropped_off }}</div>
+    </a>
+    <a href="{{ url_for('staff.dashboard', stage='washing') }}" class="card" style="text-align: center; padding: 1rem; text-decoration: none; border-color: {% if current_filter == 'washing' %}var(--color-sky){% else %}var(--color-border){% endif %};">
+      <div style="font-size: 0.8rem; color: var(--color-sky); font-weight: 600;">WASHING</div>
+      <div style="font-size: 1.75rem; font-weight: 900; color: var(--color-sky);">{{ stage_counts.washing }}</div>
+    </a>
+    <a href="{{ url_for('staff.dashboard', stage='drying') }}" class="card" style="text-align: center; padding: 1rem; text-decoration: none; border-color: {% if current_filter == 'drying' %}var(--color-sky){% else %}var(--color-border){% endif %};">
+      <div style="font-size: 0.8rem; color: #6D28D9; font-weight: 600;">DRYING</div>
+      <div style="font-size: 1.75rem; font-weight: 900; color: #6D28D9;">{{ stage_counts.drying }}</div>
+    </a>
+    <a href="{{ url_for('staff.dashboard', stage='ready') }}" class="card" style="text-align: center; padding: 1rem; text-decoration: none; border-color: {% if current_filter == 'ready' %}var(--color-warm-yellow){% else %}var(--color-border){% endif %};">
+      <div style="font-size: 0.8rem; color: var(--color-warm-yellow); font-weight: 600;">READY</div>
+      <div style="font-size: 1.75rem; font-weight: 900; color: var(--color-warm-yellow);">{{ stage_counts.ready }}</div>
+    </a>
+    <a href="{{ url_for('staff.dashboard', stage='collected') }}" class="card" style="text-align: center; padding: 1rem; text-decoration: none; border-color: {% if current_filter == 'collected' %}var(--color-success){% else %}var(--color-border){% endif %};">
+      <div style="font-size: 0.8rem; color: var(--color-success); font-weight: 600;">COLLECTED</div>
+      <div style="font-size: 1.75rem; font-weight: 900; color: var(--color-success);">{{ stage_counts.collected }}</div>
+    </a>
+  </div>
+
+  <!-- Search Filter Form -->
+  <form method="GET" action="{{ url_for('staff.dashboard') }}" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; max-width: 480px;">
+    <input type="hidden" name="stage" value="{{ current_filter }}">
+    <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search by customer name or order number (e.g. TSH-7K2M9)">
+    <button type="submit" class="btn btn-secondary">Search</button>
+    {% if search_query %}
+      <a href="{{ url_for('staff.dashboard', stage=current_filter) }}" class="btn btn-secondary btn-sm" style="display: flex; align-items: center;">Clear</a>
+    {% endif %}
+  </form>
+
+  <!-- Orders Table -->
+  <div class="card" style="padding: 0; overflow: hidden;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Order Code</th>
+            <th>Customer</th>
+            <th>Service / Pairs</th>
+            <th>Price</th>
+            <th>Stage</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in orders_data %}
+            {% set ord = item.order %}
+            {% set cust = item.customer %}
+            <tr>
+              <td>
+                <a href="{{ url_for('staff.qr_tag', order_id=ord.id) }}" style="font-weight: 800; font-family: monospace; font-size: 1.05rem;">
+                  {{ ord.order_number }}
+                </a>
+                <div style="font-size: 0.75rem; color: var(--color-text-subtle);">{{ ord.created_at.strftime('%d %b, %H:%M') }}</div>
+              </td>
+              <td>
+                <div style="font-weight: 700;">{{ cust.name if cust else 'Unknown' }}</div>
+                <div style="font-size: 0.8rem; color: var(--color-text-muted);">{{ item.masked_phone }}</div>
+              </td>
+              <td>
+                <div>{{ ord.service_display }}</div>
+                <span class="badge" style="background-color: var(--color-surface-hover); color: var(--color-text-muted);">{{ ord.pairs }} pair(s)</span>
+              </td>
+              <td><strong>R{{ "%.2f"|format(ord.price) }}</strong></td>
+              <td>
+                <span class="badge badge-{{ ord.stage }}">{{ ord.stage_display }}</span>
+              </td>
+              <td>
+                <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                  {% if ord.can_advance %}
+                    <form action="{{ url_for('staff.advance_order', order_id=ord.id) }}" method="POST" style="display: inline;">
+                      <button type="submit" class="btn btn-primary btn-sm" title="Advance to {{ ord.next_stage_display }}">
+                        Advance &rarr;
+                      </button>
+                    </form>
+                  {% endif %}
+
+                  {% if ord.stage == 'ready' %}
+                    <form action="{{ url_for('staff.mark_collected', order_id=ord.id) }}" method="POST" style="display: inline;">
+                      <button type="submit" class="btn btn-warning btn-sm" title="Mark collected by customer">
+                        Mark Collected
+                      </button>
+                    </form>
+                  {% endif %}
+
+                  <a href="{{ url_for('staff.qr_tag', order_id=ord.id) }}" class="btn btn-secondary btn-sm" title="Print QR Tag">
+                    Tag 🏷️
+                  </a>
+
+                  {% if item.wa_link %}
+                    <a href="{{ item.wa_link }}" target="_blank" rel="noopener" class="btn btn-whatsapp btn-sm" title="Send WhatsApp Message">
+                      WA 💬
+                    </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 2.5rem; color: var(--color-text-muted);">
+                No orders match your filter criteria.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

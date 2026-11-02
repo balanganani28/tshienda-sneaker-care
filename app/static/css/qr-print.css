@@ -1,0 +1,40 @@
+/* Print Stylesheet for Tshienda Printable QR Tag
+   Optimized for thermal label printers or compact 80mm x 55mm bag tags */
+
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    font-size: 12pt;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-header, .site-footer, .no-print, .btn, .flash-container {
+    display: none !important;
+  }
+
+  .print-label-card {
+    width: 80mm;
+    max-width: 80mm;
+    margin: 0 auto;
+    padding: 3mm;
+    border: 2px dashed #000000;
+    page-break-inside: avoid;
+  }
+
+  .print-qr-code {
+    width: 38mm !important;
+    height: 38mm !important;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .print-order-number {
+    font-size: 16pt !important;
+    font-weight: 900 !important;
+    text-align: center;
+    letter-spacing: 1px;
+    margin: 2mm 0;
+  }
+}
