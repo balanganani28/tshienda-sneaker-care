@@ -72,3 +72,4 @@ config_by_name = {
     'default': DevelopmentConfig
 }
 os.makedirs(os.path.join(basedir, 'instance'), exist_ok=True)
+os.makedirs(os.path.join(basedir, 'instance'), exist_ok=True)
